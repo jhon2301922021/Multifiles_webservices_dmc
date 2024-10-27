@@ -6,7 +6,7 @@ from pathlib import Path
 from fastapi.responses import JSONResponse
 from transformers import ViTImageProcessor, ViTForImageClassification
 from PIL import Image
-
+#objetos para el manejo de archivoss
 app = FastAPI()
 
 # Directory to save uploaded files
@@ -22,20 +22,20 @@ async def upload_image(file: UploadFile = File(...)):
     file_path = UPLOAD_DIR / file.filename
     with file_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-    
+
     # Open the image
     image = Image.open(file_path)
-    
+
     # Process the image and make prediction
     inputs = processor(images=image, return_tensors="pt")
     outputs = model(**inputs)
     logits = outputs.logits
     predicted_class_idx = logits.argmax(-1).item()
     predicted_class = model.config.id2label[predicted_class_idx]
-    
+
     # Remove the file after processing
     file_path.unlink()
-    
+
     return JSONResponse({"filename": file.filename, "predicted_class": predicted_class})
 
 @app.post("/upload-image/")
