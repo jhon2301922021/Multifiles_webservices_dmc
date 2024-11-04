@@ -12,13 +12,16 @@ app = FastAPI()
 # Directory to save uploaded files
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
-
+@app.get("/")
+def home():
+    # Retorna un simple mensaje de texto
+    return 'Hola mundo'
 # Load Hugging Face model and processor
 processor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224')
 model = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
 
 @app.post("/predict-image/")
-async def upload_image(file: UploadFile = File(...)):
+async def upload_image(file: UploadFile = File(...)):#ruta temporal del archivo
     file_path = UPLOAD_DIR / file.filename
     with file_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
