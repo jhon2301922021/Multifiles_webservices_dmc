@@ -6,6 +6,7 @@ from pathlib import Path
 from fastapi.responses import JSONResponse
 from transformers import ViTImageProcessor, ViTForImageClassification
 from PIL import Image
+#another
 #objetos para el manejo de archivoss
 app = FastAPI()
 
